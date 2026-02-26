@@ -1,77 +1,153 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>抽選結果</title>
-  <meta name="robots" content="noindex,nofollow" />
-  <style>
-    :root{
-      --bg1:#0b1020; --bg2:#081326;
-      --text:#e9edf5; --muted:#a7b1c5;
-      --blue:#60a5fa; --blue2:#3b82f6;
-      --shadow: 0 24px 80px rgba(0,0,0,.45);
-      --radius: 18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", "Segoe UI", Roboto, Arial;
-      color:var(--text);
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:24px;
-      background:
-        radial-gradient(900px 420px at 40% 25%, rgba(96,165,250,.12), transparent 60%),
-        radial-gradient(900px 520px at 80% 80%, rgba(168,85,247,.10), transparent 55%),
-        linear-gradient(180deg, var(--bg1), var(--bg2));
-    }
-    .card{
-      width:min(760px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 44px 24px 34px;
-      text-align:center;
-    }
-    h1{margin:0 0 10px; font-size: clamp(22px, 3.6vw, 34px); font-weight: 900;}
-    .sub{margin:0 auto 18px; color:var(--muted); font-size:14px; line-height:1.9; max-width:56ch;}
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding: 14px 20px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, var(--blue), var(--blue2));
-      color:#061a2a;
-      font-weight: 950;
-      text-decoration:none;
-      border: 1px solid rgba(255,255,255,.18);
-      box-shadow: 0 18px 42px rgba(59,130,246,.22);
-      transition: transform .08s ease, filter .15s ease;
-      min-width: 240px;
-    }
-    .btn:hover{transform: translateY(-1px); filter:brightness(1.02)}
-    .btn:active{transform: translateY(0px); filter:brightness(.98)}
-    .foot{margin-top:18px; color: rgba(233,237,245,.65); font-size:12px; line-height:1.9;}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>抽選結果発表</title>
+<meta name="robots" content="noindex,nofollow">
+
+<style>
+:root{
+  --bg1:#0b1020;
+  --bg2:#081326;
+  --gold:#ffd700;
+  --blue:#60a5fa;
+  --blue2:#3b82f6;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP";
+  color:white;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  background:
+    radial-gradient(800px 400px at 50% 20%, rgba(255,215,0,.15), transparent 60%),
+    radial-gradient(900px 500px at 80% 80%, rgba(96,165,250,.15), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg2));
+  overflow:hidden;
+}
+
+.card{
+  width:min(760px, 95%);
+  padding:48px 24px;
+  border-radius:20px;
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(10px);
+  text-align:center;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+}
+
+h1{
+  font-size: clamp(24px,4vw,36px);
+  margin-bottom:10px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.sub{
+  color:#cbd5e1;
+  margin-bottom:30px;
+  line-height:1.8;
+}
+
+.count{
+  font-size:60px;
+  font-weight:900;
+  color:var(--gold);
+  margin:20px 0;
+  text-shadow:0 0 25px rgba(255,215,0,.6);
+}
+
+.btn{
+  display:inline-block;
+  padding:16px 30px;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:900;
+  text-decoration:none;
+  background:linear-gradient(180deg,var(--blue),var(--blue2));
+  color:white;
+  box-shadow:0 20px 50px rgba(59,130,246,.3);
+  transition:.2s;
+}
+.btn:hover{
+  transform:translateY(-3px);
+}
+
+.loading{
+  margin-top:20px;
+  font-size:14px;
+  opacity:.7;
+  display:none;
+}
+
+.sparkle{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:gold;
+  border-radius:50%;
+  animation: sparkle 4s linear infinite;
+}
+@keyframes sparkle{
+  from{transform:translateY(0);opacity:1}
+  to{transform:translateY(-100vh);opacity:0}
+}
+</style>
 </head>
+
 <body>
-  <main class="card">
-    <h1>抽選結果の発表</h1>
-    <p class="sub">
-      受付情報を確認しました。<br>
-      下のボタンから結果をご確認ください。
-    </p>
 
-    <!-- クリックで当選ページへ -->
-    <a class="btn" href="./index.html">結果を見る</a>
+<!-- 背景キラキラ -->
+<script>
+for(let i=0;i<40;i++){
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=Math.random()*100+"%";
+  s.style.animationDelay=Math.random()*5+"s";
+  s.style.opacity=Math.random();
+  document.body.appendChild(s);
+}
+</script>
 
-    <div class="foot">
-      ※通信状況により表示に時間がかかる場合があります。
-    </div>
-  </main>
+<div class="card">
+  <h1>抽選結果の発表</h1>
+  <p class="sub">
+    エントリー情報を確認しました。<br>
+    まもなく結果が表示されます。
+  </p>
+
+  <div class="count" id="count">3</div>
+
+  <a class="btn" href="#" onclick="goResult()">結果を見る</a>
+
+  <div class="loading" id="loading">
+    結果を確認中です...
+  </div>
+</div>
+
+<script>
+let c=3;
+const el=document.getElementById("count");
+
+const timer=setInterval(()=>{
+  c--;
+  el.textContent=c;
+  if(c<=0){
+    clearInterval(timer);
+    el.textContent="🎉";
+  }
+},1000);
+
+function goResult(){
+  document.getElementById("loading").style.display="block";
+  setTimeout(()=>{
+    window.location.href="/aaa/";
+  },1500);
+}
+</script>
+
 </body>
 </html>
